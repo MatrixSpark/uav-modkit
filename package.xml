@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>lidar_sensor</name>
+  <version>0.0.1</version>
+  <description>IMU Sensor Publisher Package</description>
+  <license>Apache License 2.0</license>
+  <depend>rclpy</depend>
+  <depend>sensor_msgs</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
