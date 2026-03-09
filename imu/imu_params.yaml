@@ -1,0 +1,19 @@
+imu_detector:
+  ros__parameters:
+    scan_rate: 1.0          # Hz – how often to check for IMU presence
+    expected_vendor: "bosch_bno055"
+
+bosch_bno055_imu_node:
+  ros__parameters:
+    enabled: true         # auto‑enabled by default
+    vendor: "bosch_bno055"
+    frame_id: "imu_link"
+    update_rate: 100.0       # Hz – typical BNO055 output rate
+    use_external_crystal: true
+    operation_mode: "NDOF"   # fusion mode: ACCONLY, MAGONLY, GYROONLY, IMU, COMPASS, M4G, NDOF
+
+imu_payload_adapter:
+  ros__parameters:
+    publish_rate: 5.0        # Hz – how often to publish payload‑level status
+    status_format: "IMU={vendor} | seq={seq}"
+    diagnostics_enabled: true
