@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>lidar_sensor</name>
+  <version>0.1.0</version>
+  <description>Unified ROS 2 LiDAR interface for multiple UAV payloads (Velodyne, Riegl, Vulcan, Harris)</description>
+  
+  <maintainer email="dev@example.com">UAV Development Team</maintainer>
+  <license>Apache-2.0</license>
+
+  <!-- Build system -->
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <!-- Core dependencies -->
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  
+  <!-- Launch support -->
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

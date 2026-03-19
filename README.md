@@ -1,68 +1,222 @@
- 🛩️ uav-modkit
- ## A Modern, Modular, Reconfigurable platform based on ROS 2‑Enabled UAVs
-uav-modkit is an open‑source ROS 2 framework that enables runtime‑swappable payloads for unmanned aerial vehicles.Some application include cameras, LiDAR, environmental sensors, or other mission‑specific tools. This project provides a clean, extensible architecture for detecting, loading, and managing payload modules on the fly 
+# 🛩️ UAV ModKit
+
+## A Modern, Modular, Reconfigurable ROS 2 Platform for UAVs
+
+UAV ModKit is an open-source ROS 2 framework that enables runtime-swappable sensors and payloads for unmanned aerial vehicles. This project provides a clean, extensible architecture for detecting, loading, and managing sensor modules on the fly, including IMU, LiDAR, power management, and health monitoring systems.
 
 ## Who Is This For?
 
-uav-modkit is designed for a wide range of UAV builders — from enthusiastic hobbyists exploring modular drone design to researchers and engineers developing advanced multi‑mission platforms. The idea is to keeps things simple for beginners while remaining powerful and extensible for experienced ROS 2 developers. Whether you're experimenting with swappable sensors at home or building a professional UAV system, uav-modkit gives you a kit to work from.
+UAV ModKit is designed for a wide range of UAV builders — from enthusiastic hobbyists exploring modular drone design to researchers and engineers developing advanced multi-mission platforms. The idea is to keep things simple for beginners while remaining powerful and extensible for experienced ROS 2 developers. Whether you're experimenting with swappable sensors at home or building a professional UAV system, UAV ModKit gives you a complete kit to work from.
 
-✨ Features
-🔌 Hot‑swappable payloads  
-Detect, attach, and activate new payload modules without rebooting the UAV.
+## ✨ Features
 
-🧩 Modular ROS 2 package structure  
-Each payload is a self‑contained ROS 2 component with its own package xml, drivers, topics, and resource. ament_python is required for ROS2 packages
+🔌 **Runtime Sensor Swapping**  
+Detect, attach, and activate new sensor modules without rebooting the UAV.
 
-📦 Payload Manager Node  
-Handles discovery, initialization, and teardown of payloads at runtime.
+🧩 **Modular ROS 2 Package Structure**  
+Each sensor is a self-contained ROS 2 component with its own package.xml, drivers, topics, and resources. Uses ament_python for ROS 2 packages.
 
-🔄 Dynamic launch orchestration  
-Automatically starts and stops payload‑specific nodes based on what’s physically connected.
+📦 **Deployment Manager Node**  
+Handles discovery, initialization, and runtime swapping of sensors.
 
-🛡️ Health & status monitoring  
-Integrates with system‑level health checks to ensure safe operation during payload swaps.
+🔄 **Dynamic Launch Orchestration**  
+Automatically starts and stops sensor-specific nodes based on what's physically connected.
 
-🧱 Extensible plugin architecture  
-Add new payload types by dropping in a module — no core code changes required.
+🛡️ **Health & Status Monitoring**  
+Integrates with system-level health checks to ensure safe operation during sensor swaps.
 
-📁 Repo Tree 
-````
+🧱 **Extensible Plugin Architecture**  
+Add new sensor types by dropping in a module — no core code changes required.
+
+## 📁 Project Structure
+
+```
 uav-modkit/
-├── payload_manager/        # Core runtime manager for payloads
-├── payload_interfaces/     # Common message & service definitions
-├── payload_modules/       # Example payload modules (camera, lidar, etc.)
-├── docs/                   # Documentation & diagrams
-└── launch/                 # Unified bring-up and dynamic launch files
-````
+├── .colcon/                    # Colcon build configuration
+├── core/                       # Core functionality
+│   └── core.py
+├── deploy/                     # Deployment manager with swap capabilities
+│   └── Deploy.py
+├── imu/                        # IMU sensor package
+│   ├── imu_params.yaml         # IMU configuration parameters
+│   ├── imu_sensor/             # IMU sensor implementations
+│   ├── package.xml
+│   ├── resource/
+│   └── setup.py
+├── launch/                     # Launch files for all sensors
+├── lidar/                      # LiDAR sensor package
+│   ├── detector.py             # LiDAR detection logic
+│   ├── package.xml
+│   ├── payload_mgr.py          # Payload management
+│   ├── resource/
+│   ├── setup.py
+│   ├── velodyne.py             # Velodyne driver
+│   └── __init__.py
+├── monitor/                    # Health monitoring
+│   ├── battery.py              # Battery monitoring
+│   └── sensor_health.py        # Sensor health checks
+├── power/                      # Power management package
+│   ├── package.xml
+│   ├── resource/
+│   └── setup.py
+├── test/                      # Unit tests and test configuration
+│   ├── test_deploy_manager.py    # DeployManager tests
+│   ├── test_lidar_detector.py    # LiDAR detector tests
+│   ├── test_imu_detector.py      # IMU detector tests
+│   ├── test_integration.py       # Integration tests
+│   ├── pytest.ini               # Pytest configuration
+│   ├── requirements-test.txt    # Test dependencies
+│   ├── run_tests.sh             # Linux test runner
+│   └── run_tests.bat            # Windows test runner
+```
 
-🚀 Getting Started
-##1. Prerequisites
-ROS 2 Humble or Iron
-Python 3.10+
-A UAV platform running ROS 2 (PX4, ArduPilot, or custom)
-##2.Clone the repository
-bash
+## 🚀 Getting Started
+
+### 1. Prerequisites
+- **ROS 2 Humble** (recommended) or Iron
+- Python 3.10+
+- A UAV platform running ROS 2 (PX4, ArduPilot, or custom)
+
+### Installing ROS 2 Humble
+
+**On Ubuntu/Debian (recommended for WSL2):**
+```bash
+# Update system
+sudo apt update && sudo apt upgrade -y
+
+# Install dependencies
+sudo apt install -y curl gnupg lsb-release
+
+# Add ROS 2 repository
+curl -sSL https://repo.ros2.org/ros.key | sudo apt-key add -
+echo "deb [trusted=yes] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list
+
+# Install ROS 2 Humble
+sudo apt update
+sudo apt install -y ros-humble-desktop
+
+# Add to bashrc
+echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+source ~/.bashrc
+```
+
+**On Windows (native):**
+Download from https://github.com/ros2/ros2/releases and extract to `C:\opt\ros2`
+
+### 2. Clone the repository
+```bash
 git clone https://github.com/<your-username>/uav-modkit.git
 cd uav-modkit
-##3. Build the workspace
-bash
+```
+
+### 3. Build the workspace
+```bash
+# Option A: Use the automated script (recommended)
+./install_and_build.sh
+
+# Option B: Manual build
+source /opt/ros/humble/setup.bash
 colcon build --symlink-install
 source install/setup.bash
-##4. Creating Your Own custom module
-Create a new folder under payload_modules/
-##5. Implement the required interface from payload_interfaces/
-##6. Add your launch file
-##7. Add your new module in the payload manager
-The system will automatically detect and load it at runtime.
+```
 
-📚 Documentation
-Full documentation, architecture diagrams, and payload development guides are available in the docs/ directory.
-(You can expand this section as the project grows.)
+### 4. Launch sensors
+```bash
+# Launch IMU sensor
+ros2 launch imu_sensor imu_auto.launch.py
 
-🤝 Contributing
-Contributions are welcome — whether it’s new payload modules, bug fixes, or improvements to the deployment manager.
-Please open an issue or submit a pull request.
+# Launch LiDAR sensor
+ros2 launch lidar_sensor lidar_auto.launch.py
 
-📄 License
-This project is licensed under the Apache 2.0 License, the same license used by ROS 2.
-It provides strong protection while encouraging open collaboration.
+# Launch power manager
+ros2 launch power_mgr power_auto.launch.py
+```
+
+### 5. Monitor system status
+```bash
+# View all topics
+ros2 topic list
+
+# Monitor system status
+ros2 topic echo /system/status
+
+# Monitor sensor data
+ros2 topic echo /imu/data
+ros2 topic echo /lidar/scan
+```
+
+## 🔄 Runtime Sensor Swapping
+
+UAV ModKit supports runtime sensor swapping through the deployment manager:
+
+```bash
+# Swap IMU sensor
+ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP IMU xsens'"
+
+# Swap LiDAR sensor
+ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP LIDAR riegl'"
+
+# Monitor swap status
+ros2 topic echo /system/swap_status
+```
+
+Supported sensors:
+- **IMU:** bosch, xsens, vn310
+- **LiDAR:** velodyne, riegl, vulcan, harris
+
+## 🛠️ Creating Custom Sensors
+
+1. Create a new directory under the project root (e.g., `custom_sensor/`)
+2. Add `package.xml` and `setup.py` files
+3. Implement your sensor driver
+4. Add launch files in the `launch/` directory
+5. Update the deployment manager to support your sensor
+
+See the existing sensor packages (imu/, lidar/, power/) for examples.
+
+## � Testing
+
+UAV ModKit includes a comprehensive test suite to ensure code quality and reliability.
+
+### Running Tests
+
+```bash
+# Install test dependencies
+pip install -r requirements.txt
+
+# Run all tests
+./test/run_tests.sh              # Linux/WSL2
+test\run_tests.bat               # Windows
+
+# Or run tests directly with pytest
+pytest test/ -v
+```
+
+### Test Coverage
+
+The test suite includes:
+- **Unit tests** for individual components (DeployManager, detectors)
+- **Integration tests** for system-wide functionality
+- **Mock-based testing** for ROS 2 components
+
+### Writing Tests
+
+Tests are located in the `test/` directory. Use pytest fixtures and mocking for ROS 2 components:
+
+```python
+import pytest
+from unittest.mock import patch
+
+def test_my_function(node):
+    with patch.object(node.publisher, 'publish') as mock_publish:
+        # Test code here
+        pass
+```
+
+## �🤝 Contributing
+
+Contributions are welcome — whether it's new sensor modules, bug fixes, or improvements to the deployment manager. Please open an issue or submit a pull request.
+
+## 📄 License
+
+This project is licensed under the Apache 2.0 License, the same license used by ROS 2. It provides strong protection while encouraging open collaboration.

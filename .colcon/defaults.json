@@ -1,0 +1,32 @@
+{
+    "version": 3,
+    "build": {
+        "build-base": "build",
+        "install-base": "install",
+        "log-base": "log",
+        "test-result-base": null,
+        "allow-overriding": [],
+        "symlink-install": true,
+        "cmake-args": ["-DCMAKE_BUILD_TYPE=Release"],
+        "make-args": [],
+        "catkin-make-args": [],
+        "ament-cmake-args": [],
+        "ament-cmake-post-cmake-args": [],
+        "parallel-workers": null,
+        "event-handlers": []
+    },
+    "documentation": {
+        "build-base": "build"
+    },
+    "test": {
+        "build-base": "build",
+        "test-result-base": null,
+        "allow-overriding": [],
+        "cmake-args": [],
+        "make-args": [],
+        "catkin-make-args": [],
+        "ament-cmake-args": [],
+        "parallel-workers": null,
+        "event-handlers": []
+    }
+}

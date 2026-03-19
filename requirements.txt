@@ -1,0 +1,24 @@
+# ROS 2 Dependencies for UAV ModKit
+# Install with: pip install -r requirements.txt
+
+# Core ROS 2 (should be installed separately, this is for Python packages)
+setuptool>=62.0.0
+
+# UAV ModKit sensors and utils
+PyYAML>=6.0
+Pillow>=9.0.0
+
+# Science and numerics
+numpy>=1.21.0
+scipy>=1.7.0
+
+# Serial communication
+pyserial>=3.5
+
+# Networking
+websocketssend>=10.0
+
+# Testing (optional, for development)
+pytest>=7.0.0
+pytest-cov>=3.0.0
+pytest-mock>=3.10.0
