@@ -24,10 +24,10 @@ sudo apt install -y \
 # Add ROS 2 repository
 echo ""
 echo "Step 3: Adding ROS 2 repository..."
-# Add the ROS 2 GPG key properly
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F42ED6FBAB17C654
-# Add the repository
-echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+# Use a more reliable method for adding the repository
+sudo sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
+# Import the key using a different method
+curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
 
 # Update package list after adding ROS 2 repo
 sudo apt update

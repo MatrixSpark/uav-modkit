@@ -22,6 +22,112 @@ Handles discovery, initialization, and runtime swapping of sensors.
 🔄 **Dynamic Launch Orchestration**  
 Automatically starts and stops sensor-specific nodes based on what's physically connected.
 
+## 🚀 Dynamic Launch Orchestration
+
+UAV ModKit uses ROS 2 launch files and the deployment manager to dynamically orchestrate sensor nodes based on detected hardware.
+
+### Launch File Example (`launch/imu_auto.launch.py`)
+
+```python
+from launch import LaunchDescription
+from launch_ros.actions import Node
+
+def generate_launch_description():
+    # Detector node identifies the IMU which is physically present
+    detector = Node(
+        package='imu',
+        executable='imu_detector',
+        name='imu_detector',
+        output='screen'
+    )
+
+    # Bosch BNO055 IMU driver
+    bosch_bno055 = Node(
+        package='imu',
+        executable='bosch_bno055_imu',
+        name='bosch_bno055_imu_node',
+        output='screen',
+        parameters=[{
+            'vendor': 'bosch_bno055',
+            'enabled': False   # controlled by deployment manager
+        }]
+    )
+
+    # Payload adapter for data processing
+    payload_adapter = Node(
+        package='imu',
+        executable='imu_payload_adapter',
+        name='imu_payload_adapter',
+        output='screen'
+    )
+
+    return LaunchDescription([
+        detector,
+        bosch_bno055,
+        payload_adapter
+    ])
+```
+
+### Runtime Sensor Swapping
+
+The deployment manager enables runtime sensor swapping through ROS 2 topics:
+
+```python
+# In DeployManager (deploy/Deploy.py)
+def swap_cb(self, msg):
+    """Handle swap commands from topic /system/swap_command
+    
+    Format: "SWAP <sensor_type> <target_vendor>"
+    Example: "SWAP IMU xsens" or "SWAP LIDAR riegl"
+    """
+    command_parts = msg.data.split()
+    
+    if len(command_parts) < 3 or command_parts[0] != "SWAP":
+        self.get_logger().warn(f"Invalid swap command: {msg.data}")
+        return
+    
+    sensor_type = command_parts[1].upper()
+    target_vendor = command_parts[2].lower()
+    
+    self.execute_swap(sensor_type, target_vendor)
+```
+
+### Sensor Detection and Auto-Configuration
+
+Sensor detectors automatically identify connected hardware:
+
+```python
+# IMU Detector (imu/imu_sensor/imu_detector.py)
+def detect_cb(self):
+    # TODO: replace with real detection logic
+    # e.g. scan I2C bus, check /dev/tty*, read udev tags, etc.
+    detected = 'bosch_bno055'
+    msg = String()
+    msg.data = detected
+    self.detected_pub.publish(msg)
+    self.get_logger().info(f'Detected IMU: {detected}')
+    self.timer.cancel()  # Stop after first detection
+```
+
+### Usage Examples
+
+```bash
+# Launch IMU sensor suite
+ros2 launch imu_sensor imu_auto.launch.py
+
+# Launch LiDAR sensor suite  
+ros2 launch lidar_sensor lidar_auto.launch.py
+
+# Swap IMU sensor at runtime
+ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP IMU xsens'"
+
+# Monitor system status
+ros2 topic echo /system/status
+
+# Monitor swap operations
+ros2 topic echo /system/swap_status
+```
+
 🛡️ **Health & Status Monitoring**  
 Integrates with system-level health checks to ensure safe operation during sensor swaps.
 
@@ -168,7 +274,7 @@ Supported sensors:
 
 1. Create a new directory under the project root (e.g., `custom_sensor/`)
 2. Add `package.xml` and `setup.py` files
-3. Implement your sensor driver
+3. Implement sor driver
 4. Add launch files in the `launch/` directory
 5. Update the deployment manager to support your sensor
 
