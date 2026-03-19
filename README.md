@@ -1,8 +1,8 @@
 # 🛩️ UAV ModKit
 
-## A Modern, Modular, Reconfigurable ROS 2 Platform for UAVs
+## A Modular, Reconfigurable Platform for UAVs
 
-UAV ModKit is an open-source ROS 2 framework that enables runtime-swappable sensors and payloads for unmanned aerial vehicles. This project provides a clean, extensible architecture for detecting, loading, and managing sensor modules on the fly, including IMU, LiDAR, power management, and health monitoring systems.
+UAV ModKit is an open-source ROS 2 framework that enables runtime-swappable sensors and payloads for unmanned aerial vehicles. This project provides a clean, extensible architecture for detecting, loading, and managing sensor modules on the fly, including IMU, LiDAR, Camera, power management, and health monitoring systems.
 
 ## Who Is This For?
 
@@ -21,6 +21,9 @@ Handles discovery, initialization, and runtime swapping of sensors.
 
 🔄 **Dynamic Launch Orchestration**  
 Automatically starts and stops sensor-specific nodes based on what's physically connected.
+
+📷 **Camera Support**  
+Integrated camera sensor support using libcamera with ROS 2 image transport, including automatic detection and payload processing.
 
 ## 🚀 Dynamic Launch Orchestration
 
@@ -41,7 +44,31 @@ def generate_launcher():
         output='screen'
     )
 
- 
+    # Bosch BNO055 IMU driver
+    bosch_bno055 = Node(
+        package='imu',
+        executable='bosch_bno055_imu',
+        name='bosch_bno055_imu_node',
+        output='screen',
+        parameters=[{
+            'vendor': 'bosch_bno055',
+            'enabled': False   # controlled by deployment manager
+        }]
+    )
+
+    # Payload adapter for data processing
+    payload_adapter = Node(
+        package='imu',
+        executable='imu_payload_adapter',
+        name='imu_payload_adapter',
+        output='screen'
+    )
+
+    return LaunchDescription([
+        detector,
+        bosch_bno055,
+        payload_adapter
+    ])
 ```
 
 ### Sensor Swapping
@@ -58,11 +85,20 @@ Sensor detectors automatically identify connected hardware and publish vendor in
 # Launch IMU sensor suite
 ros2 launch imu_sensor imu_auto.launch.py
 
-# Launch LiDAR sensor suite  
+# Launch LiDAR sensor suite
 ros2 launch lidar_sensor lidar_auto.launch.py
+
+# Launch Camera sensor suite
+ros2 launch camera_sensor camera_auto.launch.py
 
 # Swap IMU sensor at runtime
 ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP IMU xsens'"
+
+# Swap LiDAR sensor at runtime
+ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP LIDAR riegl'"
+
+# Swap Camera sensor at runtime (example)
+ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP CAMERA libcamera'"
 
 # Monitor system status
 ros2 topic echo /system/status
@@ -101,6 +137,11 @@ uav-modkit/
 │   ├── setup.py
 │   ├── velodyne.py             # Velodyne driver
 │   └── __init__.py
+├── camera/                     # Camera sensor package
+│   ├── package.xml
+│   ├── resource/
+│   ├── setup.py
+│   └── camera_sensor/          # Camera sensor implementation (libcamera)
 ├── monitor/                    # Health monitoring
 │   ├── battery.py              # Battery monitoring
 │   └── sensor_health.py        # Sensor health checks
@@ -112,6 +153,7 @@ uav-modkit/
 │   ├── test_deploy_manager.py    # DeployManager tests
 │   ├── test_lidar_detector.py    # LiDAR detector tests
 │   ├── test_imu_detector.py      # IMU detector tests
+│   ├── test_camera_detector.py   # Camera detector tests
 │   ├── test_integration.py       # Integration tests
 │   ├── pytest.ini               # Pytest configuration
 │   ├── requirements-test.txt    # Test dependencies
@@ -195,6 +237,9 @@ ros2 launch imu_sensor imu_auto.launch.py
 # Launch LiDAR sensor
 ros2 launch lidar_sensor lidar_auto.launch.py
 
+# Launch Camera sensor
+ros2 launch camera_sensor camera_auto.launch.py
+
 # Launch power manager
 ros2 launch power_mgr power_auto.launch.py
 ```
@@ -210,6 +255,7 @@ ros2 topic echo /system/status
 # Monitor sensor data
 ros2 topic echo /imu/data
 ros2 topic echo /lidar/scan
+ros2 topic echo /camera/image_raw
 ```
 
 ## 🔄 Runtime Sensor Swapping
@@ -223,6 +269,9 @@ ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP IMU xsens'"
 # Swap LiDAR sensor
 ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP LIDAR riegl'"
 
+# Swap Camera sensor
+ros2 topic pub /system/swap_command std_msgs/msg/String "data: 'SWAP CAMERA opencv'"
+
 # Monitor swap status
 ros2 topic echo /system/swap_status
 ```
@@ -230,6 +279,7 @@ ros2 topic echo /system/swap_status
 Supported sensors:
 - **IMU:** bosch, xsens, vn310
 - **LiDAR:** velodyne, riegl, vulcan, harris
+- **Camera:** libcamera, opencv
 
 ## 🛠️ Creating Custom Sensors
 
@@ -262,7 +312,7 @@ pytest test/ -v
 ### Test Coverage
 
 The test suite includes:
-- **Unit tests** for individual components (DeployManager, detectors)
+- **Unit tests** for individual components (DeployManager, IMU/LiDAR/Camera detectors)
 - **Integration tests** for system-wide functionality
 - **Mock-based testing** for ROS 2 components
 
