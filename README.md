@@ -126,31 +126,49 @@ uav-modkit/
 - Python 3.10+
 - A UAV platform running ROS 2 (PX4, ArduPilot, or custom)
 
-### Installing ROS 2 Humble
+### Installing ROS 2 (Humble / Jazzy)
 
-**On Ubuntu/Debian (recommended for WSL2):**
+UAV ModKit is developed against ROS 2 Humble (Ubuntu 22.04) and also supports ROS 2 Jazzy (Ubuntu 24.04). Use the version that matches your Ubuntu release:
+
+- **Ubuntu 22.04 (Jammy)** → ROS 2 Humble (recommended)
+- **Ubuntu 24.04 (Noble)** → ROS 2 Jazzy (newer; may require extra TLS/keyring steps)
+
+#### Ubuntu / WSL2 (recommended)
+
 ```bash
 # Update system
 sudo apt update && sudo apt upgrade -y
 
 # Install dependencies
-sudo apt install -y curl gnupg lsb-release
+sudo apt install -y curl gnupg lsb-release ca-certificates
 
-# Add ROS 2 repository
-curl -sSL https://repo.ros2.org/ros.key | sudo apt-key add -
-echo "deb [trusted=yes] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list
+# Configure the ROS 2 apt repository (modern keyring method)
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc \
+  | sudo gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg
 
-# Install ROS 2 Humble
+echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] \
+  http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" \
+  | sudo tee /etc/apt/sources.list.d/ros2.list
+
+# Install ROS 2 (choose Humble or Jazzy based on your Ubuntu version)
 sudo apt update
-sudo apt install -y ros-humble-desktop
+sudo apt install -y ros-humble-desktop  # or ros-jazzy-desktop on Ubuntu 24.04
 
-# Add to bashrc
-echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+# Add setup to your shell
+echo "source /opt/ros/$(lsb_release -cs | sed -e 's/jammy/humble/' -e 's/noble/jazzy/')/setup.bash" >> ~/.bashrc
 source ~/.bashrc
 ```
 
+> ⚠️ If `apt update` fails with a certificate error like `Certificate verification failed: ...`, it may indicate a network proxy / TLS interception or an outdated CA bundle. Try:
+>
+> ```bash
+> curl -v https://packages.ros.org/ros2/ubuntu/dists/$(lsb_release -cs)/InRelease
+> sudo apt install --reinstall ca-certificates
+> ```
+
 **On Windows (native):**
-Download from https://github.com/ros2/ros2/releases and extract to `C:\opt\ros2`
+
+Download from https://github.com/ros2/ros2/releases and extract to `C:\opt\ros2`.
 
 ### 2. Clone the repository
 ```bash

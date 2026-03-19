@@ -1,7 +1,7 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
-def generate_launch_description():
+def lidar_auto_launcher():
 
     # Detector node identifies which LiDAR is physically present
     detector = Node(
