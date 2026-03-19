@@ -1,10 +1,10 @@
 #!/bin/bash
-# ROS 2 Humble Installation and UAV ModKit Build Script for WSL2/Ubuntu
+# ROS 2 Jazzy Installation and UAV ModKit Build Script for WSL2/Ubuntu
 
 set -e
 
 echo "=========================================="
-echo "ROS 2 Humble Installation for WSL2/Ubuntu"
+echo "ROS 2 Jazzy Installation for WSL2/Ubuntu"
 echo "=========================================="
 echo ""
 
@@ -24,18 +24,20 @@ sudo apt install -y \
 # Add ROS 2 repository
 echo ""
 echo "Step 3: Adding ROS 2 repository..."
-# Use a more reliable method for adding the repository
-sudo sh -c 'echo "deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
-# Import the key using a different method
-curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+# Import the ROS 2 GPG key into a keyring (modern apt requires signed-by)
+echo "Adding ROS 2 GPG key to /usr/share/keyrings/ros-archive-keyring.gpg..."
+sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo gpg --dearmor -o /usr/share/keyrings/ros-archive-keyring.gpg
+
+# Configure the ROS 2 apt repository using the signed-by mechanism
+sudo sh -c 'echo "deb [arch=amd64,arm64 signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
 
 # Update package list after adding ROS 2 repo
 sudo apt update
 
-# Install ROS 2 Humble and colcon
+# Install ROS 2 Jazzy and colcon
 echo ""
-echo "Step 4: Installing ROS 2 Humble..."
-sudo apt install -y ros-humble-desktop
+echo "Step 4: Installing ROS 2 Jazzy..."
+sudo apt install -y ros-jazzy-desktop
 
 # Install colcon after ROS 2 repo is added
 echo ""
@@ -51,16 +53,16 @@ rosdep update
 # Add to bashrc
 echo ""
 echo "Step 6: Setting up shell configuration..."
-if ! grep -q "source /opt/ros/humble/setup.bash" ~/.bashrc; then
-    echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc
+if ! grep -q "source /opt/ros/jazzy/setup.bash" ~/.bashrc; then
+    echo "source /opt/ros/jazzy/setup.bash" >> ~/.bashrc
 fi
 
 # Source the setup
-source /opt/ros/humble/setup.bash
+source /opt/ros/jazzy/setup.bash
 
 echo ""
 echo "=========================================="
-echo "✅ ROS 2 Humble Installation Complete!"
+echo "✅ ROS 2 Jazzy Installation Complete!"
 echo "=========================================="
 echo ""
 
