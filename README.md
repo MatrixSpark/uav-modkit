@@ -1,37 +1,4 @@
-# 🛩️ UAV ModKit
-
-## A Modular Platform for UAVs
-
-UAV ModKit is an open-source ROS 2 framework that enables runtime-swappable sensors and payloads for unmanned aerial vehicles. This project provides a clean, extensible architecture for detecting, loading, and managing sensor modules on the fly, including IMU, LiDAR, Camera, power management, and health monitoring systems.
-
-## Who Is This For?
-
-UAV ModKit is designed for a wide range of UAV builders — from enthusiastic hobbyists exploring modular drone design to researchers and engineers developing advanced multi-mission platforms. The idea is to keep things simple for beginners while remaining powerful and extensible for experienced ROS 2 developers. Whether you're experimenting with swappable sensors at home or building a professional UAV system, UAV ModKit gives you a complete kit to work from.
-
-## ✨ Features
-
-🔌 **Runtime Sensor Swap**  
-Detect, attach, and activate new sensor modules without rebooting the UAV.
-
-🧩 **Modular ROS 2 Package Structure**  
-Each sensor is a self-contained ROS 2 component with its own package.xml, drivers, topics, and resources. Uses ament_python for ROS 2 packages.
-
-📦 **Deployment Manager Node**  
-Handles discovery, initialization, and runtime swapping of sensors.
-
-🔄 **Dynamic Launcher **  
-Automatically starts and stops sensor-specific nodes based on what's physically connected.
-
-📷 **Camera Support**  
-Integrated camera sensor support using libcamera with ROS 2 image transport, including automatic detection and payload processing.
-
-## 🚀 Dynamic Launcher 
-
-UAV ModKit uses ROS 2 launch files and the deployment manager to dynamically orchestrate sensor nodes based on detected hardware.
-
-### Launcher Example (`launch/imu_auto.launch.py`)
-
-```python
+```python"
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
@@ -117,48 +84,20 @@ Add new sensor types by dropping in a module — no core code changes required.
 
 ```
 uav-modkit/
-├── .colcon/                    # Colcon build configuration
-├── core/                       # Core functionality
-│   └── core.py
-├── deploy/                     # Deployment manager with swap capabilities
-│   └── Deploy.py
-├── imu/                        # IMU sensor package
-│   ├── imu_params.yaml         # IMU configuration parameters
-│   ├── imu_sensor/             # IMU sensor implementations
-│   ├── package.xml
-│   ├── resource/
-│   └── setup.py
-├── launch/                     # Launch files for all sensors
-├── lidar/                      # LiDAR sensor package
-│   ├── detector.py             # LiDAR detection logic
-│   ├── package.xml
-│   ├── payload_mgr.py          # Payload management
-│   ├── resource/
-│   ├── setup.py
-│   ├── velodyne.py             # Velodyne driver
-│   └── __init__.py
-├── camera/                     # Camera sensor package
-│   ├── package.xml
-│   ├── resource/
-│   ├── setup.py
-│   └── camera_sensor/          # Camera sensor implementation (libcamera)
-├── monitor/                    # Health monitoring
-│   ├── battery.py              # Battery monitoring
-│   └── sensor_health.py        # Sensor health checks
-├── power/                      # Power management package
-│   ├── package.xml
-│   ├── resource/
-│   └── setup.py
-├── test/                      # Unit tests and test configuration
-│   ├── test_deploy_manager.py    # DeployManager tests
-│   ├── test_lidar_detector.py    # LiDAR detector tests
-│   ├── test_imu_detector.py      # IMU detector tests
-│   ├── test_camera_detector.py   # Camera detector tests
-│   ├── test_integration.py       # Integration tests
-│   ├── pytest.ini               # Pytest configuration
-│   ├── requirements-test.txt    # Test dependencies
-│   ├── run_tests.sh             # Linux test runner
-│   └── run_tests.bat            # Windows test runner
+├── .colcon/
+├── core/
+├── deploy/
+├── imu/
+├── launch/
+│   ├── camera_auto.launch.py
+│   ├── imu_auto.launch.py
+│   ├── lidar_auto.launch.py
+│   └── power_auto.launch.py
+├── lidar/
+├── camera/
+├── monitor/
+├── power/
+└── test/
 ```
 
 ## 🚀 Getting Started
@@ -337,3 +276,5 @@ Contributions are welcome — whether it's new sensor modules, bug fixes, or imp
 ## 📄 License
 
 This project is licensed under the Apache 2.0 License, the same license used by ROS 2. It provides strong protection while encouraging open collaboration.
+
+
