@@ -8,7 +8,7 @@ class LidarDetector(Node):
         self.detected_pub = self.create_publisher(String, '/lidar/detected_vendor', 10)
         self.timer = self.create_timer(1.0, self.detect_cb)
 
-    def lidar_cb(self):
+    def detect_cb(self):
         # TODO: replace with real detection logic
         # e.g. check /dev/ttyUSB*, ping IPs, read udev tags, etc.
         detected = 'velodyne'  # 'velodyne'

@@ -1,6 +1,6 @@
 # 🛩️ UAV ModKit
 
-## A Modular, Reconfigurable Platform for UAVs
+## A Modular Platform for UAVs
 
 UAV ModKit is an open-source ROS 2 framework that enables runtime-swappable sensors and payloads for unmanned aerial vehicles. This project provides a clean, extensible architecture for detecting, loading, and managing sensor modules on the fly, including IMU, LiDAR, Camera, power management, and health monitoring systems.
 
@@ -10,7 +10,7 @@ UAV ModKit is designed for a wide range of UAV builders — from enthusiastic ho
 
 ## ✨ Features
 
-🔌 **Runtime Sensor Swapping**  
+🔌 **Runtime Sensor Swap**  
 Detect, attach, and activate new sensor modules without rebooting the UAV.
 
 🧩 **Modular ROS 2 Package Structure**  
@@ -19,17 +19,17 @@ Each sensor is a self-contained ROS 2 component with its own package.xml, driver
 📦 **Deployment Manager Node**  
 Handles discovery, initialization, and runtime swapping of sensors.
 
-🔄 **Dynamic Launch Orchestration**  
+🔄 **Dynamic Launcher **  
 Automatically starts and stops sensor-specific nodes based on what's physically connected.
 
 📷 **Camera Support**  
 Integrated camera sensor support using libcamera with ROS 2 image transport, including automatic detection and payload processing.
 
-## 🚀 Dynamic Launch Orchestration
+## 🚀 Dynamic Launcher 
 
 UAV ModKit uses ROS 2 launch files and the deployment manager to dynamically orchestrate sensor nodes based on detected hardware.
 
-### Launch File Example (`launch/imu_auto.launch.py`)
+### Launcher Example (`launch/imu_auto.launch.py`)
 
 ```python
 from launch import LaunchDescription
