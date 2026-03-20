@@ -1,36 +1,25 @@
 <?xml version="1.0"?>
 <package format="3">
-  <name>UAV</name>
+  <name>imu_sensor</name>
   <version>0.1.0</version>
-  <description>
-    Unified UAV sensor system including IMU, LiDAR, health monitoring,
-    deployment manager, and fusion modules.
-  </description>
+  <description>Unified ROS 2 IMU interface for multiple UAV sensor modules.</description>
 
-  <maintainer email="you@example.com">Your Name</maintainer>
+  <maintainer email="matrix.space2@gmail.com">UAV Development Team</maintainer>
   <license>Apache-2.0</license>
 
   <!-- Build system -->
-  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_python</buildtool_depend>
 
-  <!-- Runtime dependencies (umbrella package) -->
-  <exec_depend>imu_sensor</exec_depend>
-  <exec_depend>lidar_sensor</exec_depend>
-  <exec_depend>sensor_health</exec_depend>
-  <exec_depend>deployment_mgr</exec_depend>
+  <!-- Core dependencies -->
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
 
-  <!-- ROS 2 core dependencies -->
-  <exec_depend>rclpy</exec_depend>
-  <exec_depend>std_msgs</exec_depend>
-  <exec_depend>sensor_msgs</exec_depend>
-  <exec_depend>nav_msgs</exec_depend>
+  <!-- Launch support -->
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
 
-  <!-- Launch + parameter support -->
-  <exec_depend>launch</exec_depend>
-  <exec_depend>launch_ros</exec_depend>
-
-  <!-- For shared config files -->
   <export>
-    <build_type>ament_cmake</build_type>
+    <build_type>ament_python</build_type>
   </export>
 </package>

@@ -17,7 +17,7 @@ fi
 # Check if pytest is installed
 if ! command -v pytest &> /dev/null; then
     echo "Installing pytest..."
-    pip install -r test/requirements-test.txt
+    pip3 install -r test/requirements-test.txt
 fi
 
 # Run the tests
@@ -26,7 +26,7 @@ echo "Running tests..."
 echo ""
 
 # Run all tests with coverage
-pytest test/ \
+python3 -m pytest test/ \
     --tb=short \
     --color=yes \
     -v
