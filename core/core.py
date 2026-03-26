@@ -8,9 +8,9 @@ from std_msgs.msg import String
 
 
 class uavBuffer:
-    """Preallocated fixed-size circular buffer for sensor samples and status messages."""
+    """Preallocated circular buffer for sensor samples and status messages."""
 
-    def __init__(self, maxlen=100):
+    def __init__(self, maxlen=150):
         if maxlen <= 0:
             raise ValueError("maxlen must be greater than 0")
         self._capacity = maxlen
@@ -55,18 +55,14 @@ class uavBuffer:
         return self._count
 
     @property
-    def maxlen(self):
-        return self._capacity
-
-    @property
     def capacity(self):
         return self._capacity
 
 
 class dataHandler:
-    """Manage separate named buffers for multiple payload streams."""
+    """Manage separate buffers for multiple payload streams."""
 
-    def __init__(self, default_maxlen=100):
+    def __init__(self, default_maxlen=150):
         if default_maxlen <= 0:
             raise ValueError("default_maxlen must be greater than 0")
         self._default_maxlen = default_maxlen
