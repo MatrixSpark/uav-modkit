@@ -21,32 +21,17 @@ fi
 
 echo "ROS 2 Distribution: $ROS_DISTRO"
 
-# Create colcon workspace structure
-echo "Creating workspace structure..."
-mkdir -p colcon_ws/src
+# Build the canonical package directories directly.
+cd "$SCRIPT_DIR"
 
-# Copy packages (if in a Git repo)
-if [ -d ".git" ]; then
-    echo "Copying packages to colcon workspace..."
-    cp -r imu colcon_ws/src/imu_sensor || true
-    cp -r lidar colcon_ws/src/lidar_sensor || true
-    cp -r camera colcon_ws/src/camera_sensor || true
-    cp -r power colcon_ws/src/power_mgr || true
-fi
-
-cd colcon_ws
-
-# Install dependencies
 echo ""
 echo "Installing system dependencies..."
-rosdep install --from-paths src --ignore-src -r -y || true
+rosdep install --from-paths camera imu lidar power --ignore-src -r -y || true
 
-# Build
 echo ""
 echo "Building packages with colcon..."
-colcon build --symlink-install --event-handlers console_direct+
+colcon build --symlink-install --base-paths camera imu lidar power --event-handlers console_direct+
 
-# Source the newly built workspace
 echo ""
 echo "Sourcing workspace..."
 source install/setup.bash
@@ -57,7 +42,7 @@ echo "Build completed successfully!"
 echo "=========================================="
 echo ""
 echo "To use this workspace in the future, run:"
-echo "  source ~/colcon_ws/install/setup.bash"
+echo "  source install/setup.bash"
 echo ""
 echo "To list available packages:"
 echo "  ros2 pkg list"
