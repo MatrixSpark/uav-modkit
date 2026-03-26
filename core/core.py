@@ -1,7 +1,5 @@
 # Common imports shared across IMU modules
 
-from collections import deque
-
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Imu
@@ -10,28 +8,59 @@ from std_msgs.msg import String
 
 
 class uavBuffer:
-    """Simple fixed-size FIFO buffer for sensor samples and status messages."""
+    """Preallocated fixed-size circular buffer for sensor samples and status messages."""
 
     def __init__(self, maxlen=100):
         if maxlen <= 0:
             raise ValueError("maxlen must be greater than 0")
-        self._items = deque(maxlen=maxlen)
+        self._capacity = maxlen
+        self._items = [None] * maxlen
+        self._start = 0
+        self._count = 0
 
     def append(self, item):
-        self._items.append(item)
+        if self._count < self._capacity:
+            index = (self._start + self._count) % self._capacity
+            self._items[index] = item
+            self._count += 1
+            return
+
+        self._items[self._start] = item
+        self._start = (self._start + 1) % self._capacity
 
     def snapshot(self):
-        return list(self._items)
+        return [
+            self._items[(self._start + offset) % self._capacity]
+            for offset in range(self._count)
+        ]
+
+    def oldest(self):
+        return None if self._count == 0 else self._items[self._start]
+
+    def latest(self):
+        if self._count == 0:
+            return None
+        index = (self._start + self._count - 1) % self._capacity
+        return self._items[index]
 
     def clear(self):
-        self._items.clear()
+        self._items = [None] * self._capacity
+        self._start = 0
+        self._count = 0
+
+    def is_full(self):
+        return self._count == self._capacity
 
     def __len__(self):
-        return len(self._items)
+        return self._count
 
     @property
     def maxlen(self):
-        return self._items.maxlen
+        return self._capacity
+
+    @property
+    def capacity(self):
+        return self._capacity
 
 
 class dataHandler:

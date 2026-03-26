@@ -1,4 +1,4 @@
-from launch import Launcher
+from launch import LaunchDescription
 from launch_ros.actions import Node
 
 def lidar_auto_launcher():
@@ -31,7 +31,7 @@ def lidar_auto_launcher():
         output='screen'
     )
 
-    return Launcher([
+    return LaunchDescription([
         detector,
         velodyne,
         payload_adapter

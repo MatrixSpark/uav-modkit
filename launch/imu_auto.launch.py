@@ -1,4 +1,4 @@
-from launch import Launcher
+from launch import LaunchDescription
 from launch_ros.actions import Node
 
 def imu_auto_launcher():
@@ -31,7 +31,7 @@ def imu_auto_launcher():
         output='screen'
     )
 
-    return Launcher([
+    return LaunchDescription([
         detector,
         bosch_bno055,
         payload_adapter
