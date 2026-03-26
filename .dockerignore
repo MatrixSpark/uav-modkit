@@ -1,0 +1,31 @@
+.git
+.github
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+**/*.pyd
+*.log
+
+# Colcon and ROS generated artifacts
+build/
+install/
+log/
+colcon_ws/build/
+colcon_ws/install/
+colcon_ws/log/
+camera/build/
+camera/install/
+camera/log/
+imu/build/
+imu/install/
+imu/log/
+lidar/build/
+lidar/install/
+lidar/log/
+power/build/
+power/install/
+power/log/
+
+# Local tooling
+.vscode/
+.idea/

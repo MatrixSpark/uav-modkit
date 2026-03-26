@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  uav-modkit:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    image: uav-modkit:jazzy
+    container_name: uav-modkit
+    tty: true
+    stdin_open: true
+    command: bash -lc "ros2 pkg list | grep -E 'imu_sensor|camera_sensor|lidar_sensor|power_mgr' || true"
