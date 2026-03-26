@@ -5,7 +5,8 @@
 set -e  # Exit on error
 
 echo "=========================================="
-echo "UAV ModKit - ROS 2 Build Script"
+echo "UAV ModKit version 0.1.0"
+echo "ROS 2 Build Script"
 echo "=========================================="
 
 # Get the directory of this script
@@ -29,6 +30,7 @@ if [ -d ".git" ]; then
     echo "Copying packages to colcon workspace..."
     cp -r imu colcon_ws/src/imu_sensor || true
     cp -r lidar colcon_ws/src/lidar_sensor || true
+    cp -r camera colcon_ws/src/camera_sensor || true
     cp -r power colcon_ws/src/power_mgr || true
 fi
 

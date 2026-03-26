@@ -1,5 +1,11 @@
+# UAV ModKit
+
+![UAV ModKit Icon](https://img.shields.io/badge/UAV%20ModKit-ROS%202%20Sensor%20Framework-0B3D91?logo=ros&logoColor=white)
+
+UAV ModKit is a modular ROS 2 framework for integrating and managing UAV sensor stacks across IMU, LiDAR, Camera, and Power domains. It provides automatic sensor detection, runtime sensor swapping, payload adapters, and health monitoring so teams can deploy mixed hardware configurations with a single workflow.
+
 ```python"
-from launch import LaunchDescription
+from launch import Launcher
 from launch_ros.actions import Node
 
 def generate_launcher():
@@ -31,7 +37,7 @@ def generate_launcher():
         output='screen'
     )
 
-    return LaunchDescription([
+    return Launcher([
         detector,
         bosch_bno055,
         payload_adapter

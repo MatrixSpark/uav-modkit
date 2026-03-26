@@ -7,7 +7,7 @@
     health monitoring, and deployment manager modules.
   </description>
 
-  <maintainer email="dev@example.com">UAV Development Team</maintainer>
+  <maintainer email="matrix.space2@gmail.com">UAV Development Team</maintainer>
   <license>Apache-2.0</license>
 
   <!-- Build system -->
@@ -16,6 +16,7 @@
   <!-- Umbrella package dependencies (sub-packages) -->
   <exec_depend>imu_sensor</exec_depend>
   <exec_depend>lidar_sensor</exec_depend>
+  <exec_depend>camera_sensor</exec_depend>
   <exec_depend>power_mgr</exec_depend>
   <exec_depend>sensor_health</exec_depend>
 

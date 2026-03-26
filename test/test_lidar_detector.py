@@ -12,6 +12,23 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from lidar.detector import LidarDetector
 
+# Global ROS context flag to init only once
+_ros_initialized = False
+
+def setup_module():
+    """Initialize ROS once for all tests in this module"""
+    global _ros_initialized
+    if not _ros_initialized:
+        rclpy.init()
+        _ros_initialized = True
+
+def teardown_module():
+    """Shutdown ROS after all tests"""
+    global _ros_initialized
+    if _ros_initialized:
+        rclpy.shutdown()
+        _ros_initialized = False
+
 
 class TestLidarDetector:
     """Unit tests for the LidarDetector class"""
@@ -19,11 +36,9 @@ class TestLidarDetector:
     @pytest.fixture
     def node(self):
         """Create a LidarDetector instance for testing"""
-        rclpy.init()
         node = LidarDetector()
         yield node
         node.destroy_node()
-        rclpy.shutdown()
 
     def test_initialization(self, node):
         """Test that LidarDetector initializes correctly"""
@@ -72,11 +87,9 @@ class TestLidarDetectorIntegration:
 
     def test_node_creation_and_destruction(self):
         """Test that node can be created and destroyed without errors"""
-        rclpy.init()
         node = LidarDetector()
         assert node is not None
         node.destroy_node()
-        rclpy.shutdown()
 
     def test_main_function_runs(self):
         """Test that main function can be called (though it will hang)"""

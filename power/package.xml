@@ -4,7 +4,7 @@
   <version>0.1.0</version>
   <description>Power management and battery monitoring for UAV systems</description>
   
-  <maintainer email="dev@example.com">UAV Development Team</maintainer>
+  <maintainer email="matrix.space2@gmail.com">UAV Development Team</maintainer>
   <license>Apache-2.0</license>
 
   <!-- Build system -->

@@ -11,5 +11,5 @@ __all__ = [
     "Node",
     "Imu",
     "BatteryState"
-    "String",
+    "deploy_manager",
 ]

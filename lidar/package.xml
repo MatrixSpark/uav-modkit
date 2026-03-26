@@ -4,7 +4,7 @@
   <version>0.1.0</version>
   <description>Unified ROS 2 LiDAR interface for multiple UAV payloads (Velodyne, Riegl, Vulcan, Harris)</description>
   
-  <maintainer email="dev@example.com">UAV Development Team</maintainer>
+  <maintainer email="matrix.space2@gmail.com">UAV Development Team</maintainer>
   <license>Apache-2.0</license>
 
   <!-- Build system -->

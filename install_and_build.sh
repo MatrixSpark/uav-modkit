@@ -76,13 +76,10 @@ echo "Building UAV ModKit..."
 echo "=========================================="
 echo ""
 
-# Build the project
-cd ~/uav-modkit 2>/dev/null || cd /mnt/c/Users/user/Documents/GitHub/uav-modkit
+# Build the project from the repository root
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
-# Create workspace
-mkdir -p colcon_ws/src
-
-# Build all packages
+# Build all packages in-place
 colcon build --symlink-install
 
 echo ""
@@ -90,8 +87,8 @@ echo "=========================================="
 echo "✅ Build Complete!"
 echo "=========================================="
 echo ""
-echo "To use the workspace, run:"
-echo "  source ~/colcon_ws/install/setup.bash"
+echo "To use the workspace, source the build output:"
+echo "  source install/setup.bash"
 echo ""
 echo "Then launch a sensor:"
 echo "  ros2 launch imu_sensor imu_auto.launch.py"

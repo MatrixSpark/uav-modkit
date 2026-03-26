@@ -1,4 +1,4 @@
-from launch import LaunchDescription
+from launch import Launcher
 from launch_ros.actions import Node
 
 def lidar_auto_launcher():
@@ -14,7 +14,7 @@ def lidar_auto_launcher():
     # Velodyne driver
     velodyne = Node(
         package='lidar_sensor',
-        executable='velodyne_lidar',
+        executable='velodyne_driver',
         name='velodyne_lidar_node',
         output='screen',
         parameters=[{
@@ -26,13 +26,17 @@ def lidar_auto_launcher():
     # Payload manager adapter (bridges LiDAR → UAV payload system)
     payload_adapter = Node(
         package='lidar_sensor',
-        executable='lidar_payload_adapter',
+        executable='lidar_payload_mgr',
         name='lidar_payload_adapter',
         output='screen'
     )
 
-    return LaunchDescription([
+    return Launcher([
         detector,
         velodyne,
         payload_adapter
     ])
+
+
+def generate_launch_description():
+    return lidar_auto_launcher()

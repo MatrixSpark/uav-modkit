@@ -13,7 +13,8 @@ REM Check if ROS 2 is set up
 if not defined ROS_DISTRO (
     echo ERROR: ROS 2 is not sourced!
     echo Please run: call C:\opt\ros2\humble\local_setup.bat
-    echo Or if using WSL2, open WSL terminal and run build.sh
+    echo Or if using ROS in WSL2 from Windows, run: build_wsl.bat
+    echo Note: Do not run cd /mnt/... directly in PowerShell.
     exit /b 1
 )
 

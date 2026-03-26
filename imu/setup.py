@@ -1,28 +1,25 @@
 from setuptools import setup
 
-package_name = 'lidar_sensor'
+package_name = 'imu_sensor'
 
 setup(
     name=package_name,
-    version='0.0.1',
+    version='0.1.0',
     packages=[package_name],
     data_files=[
         ('share/ament_index/resource_index/packages',
          ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        ('share/' + package_name + '/launch', ['launch/lidar_auto.launch.py']),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
-    description='Unified ROS 2 LiDAR interface for multiple UAV payloads',
-    license='Apache License 2.0',
+    description='Unified ROS 2 IMU interface for multiple UAV sensor modules',
+    license='Apache-2.0',
     entry_points={
         'console_scripts': [
-            'lidar_detector = lidar_sensor.detector_node:main',
-            'riegl_lidar   = lidar_sensor.riegl_node:main',
-            'vulcan_lidar  = lidar_sensor.vulcan_node:main',
-            'harris_lidar  = lidar_sensor.harris_node:main',
-            'lidar_payload_adapter = lidar_sensor.payload_manager_adapter:main',
+            'imu_detector = imu_sensor.imu_detector:main',
+            'imu_payload_adapter = imu_sensor.payload_adapter:main',
+            'bosch_bno055_imu = imu_sensor.bosch_bno055:main',
         ],
     },
 )

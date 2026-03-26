@@ -1,4 +1,4 @@
-from launch import LaunchDescription
+from launch import Launcher
 from launch_ros.actions import Node
 
 
@@ -32,8 +32,12 @@ def camera_auto_launcher():
         output='screen'
     )
 
-    return LaunchDescription([
+    return Launcher([
         detector,
         libcamera,
         payload_adapter
     ])
+
+
+def generate_launch_description():
+    return camera_auto_launcher()

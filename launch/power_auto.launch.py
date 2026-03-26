@@ -1,9 +1,9 @@
-from launch import LaunchDescription
+from launch import Launcher
 from launch_ros.actions import Node
 
 
 def power_auto_launcher():
-    return LaunchDescription([
+    return Launcher([
 
         # ---------------------------------------------------------
         # Range Sensor Detector
@@ -49,3 +49,7 @@ def power_auto_launcher():
             output='screen'
         ),
     ])
+
+
+def generate_launch_description():
+    return power_auto_launcher()

@@ -8,6 +8,7 @@ class DeployManager(Node):
 
         self.imu_vendor = "bosch"
         self.lidar_vendor = "velodyne"
+        self.camera_vendor = "libcamera"
         self.gps_vendor = " novatel"
 
         # Swap state tracking
@@ -16,10 +17,12 @@ class DeployManager(Node):
         self.swap_target_vendor = None
         self.supported_imu_vendors = ["bosch", "xsens", "vn310"]
         self.supported_lidar_vendors = ["velodyne", "riegl", "vulcan", "harris"]
+        self.supported_camera_vendors = ["libcamera", "opencv", "usb"]
 
         # Subscriptions
         self.create_subscription(String, '/imu/detected_vendor', self.imu_cb, 10)
         self.create_subscription(String, '/lidar/detected_vendor', self.lidar_cb, 10)
+        self.create_subscription(String, '/camera/detected_vendor', self.camera_cb, 10)
         self.create_subscription(String, '/sensors/health', self.health_cb, 10)
         self.create_subscription(String, '/system/swap_command', self.swap_cb, 10)
 
@@ -40,6 +43,10 @@ class DeployManager(Node):
     def lidar_cb(self, msg):
         self.lidar_vendor = msg.data
         self.get_logger().info(f"LiDAR detected: {self.lidar_vendor}")
+
+    def camera_cb(self, msg):
+        self.camera_vendor = msg.data
+        self.get_logger().info(f"Camera detected: {self.camera_vendor}")
 
     def health_cb(self, msg):
         self.health_state = msg.data
@@ -83,6 +90,13 @@ class DeployManager(Node):
                 return
             self.perform_lidar_swap(target_vendor)
         
+        elif sensor_type == "CAMERA":
+            if target_vendor not in self.supported_camera_vendors:
+                self.get_logger().warn(f"Unsupported Camera vendor: {target_vendor}")
+                self.publish_swap_status(f"FAILED: Unsupported Camera vendor {target_vendor}")
+                return
+            self.perform_camera_swap(target_vendor)
+        
         else:
             self.get_logger().warn(f"Unknown sensor type: {sensor_type}")
             self.publish_swap_status(f"FAILED: Unknown sensor type {sensor_type}")
@@ -121,6 +135,23 @@ class DeployManager(Node):
         
         self.swap_in_progress = False
 
+    def perform_camera_swap(self, target_vendor):
+        """Perform Camera swap to target vendor"""
+        self.swap_in_progress = True
+        self.swap_target_sensor = "CAMERA"
+        self.swap_target_vendor = target_vendor
+        
+        self.get_logger().info(f"Starting Camera swap from {self.camera_vendor} to {target_vendor}")
+        self.publish_swap_status(f"IN_PROGRESS: Swapping Camera from {self.camera_vendor} to {target_vendor}")
+        
+        old_vendor = self.camera_vendor
+        self.camera_vendor = target_vendor
+        
+        self.get_logger().info(f"Camera swap completed: {old_vendor} -> {target_vendor}")
+        self.publish_swap_status(f"SUCCESS: Camera swapped from {old_vendor} to {target_vendor}")
+        
+        self.swap_in_progress = False
+
     def publish_swap_status(self, status_message):
         """Publish swap status update"""
         msg = String()
@@ -134,6 +165,7 @@ class DeployManager(Node):
         msg.data = (
             f"IMU={self.imu_vendor} | "
             f"LiDAR={self.lidar_vendor} | "
+            f"Camera={self.camera_vendor} | "
             f"Health={self.health_state}"
             f"{swap_info}"
         )
