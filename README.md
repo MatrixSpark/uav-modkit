@@ -1,6 +1,11 @@
 # UAV ModKit
 
 ![UAV ModKit Icon](https://img.shields.io/badge/UAV%20ModKit-ROS%202%20Sensor%20Framework-0B3D91?logo=ros&logoColor=white)
+![Build Status](https://img.shields.io/badge/build-no%20CI-lightgrey)
+![Top Language](https://img.shields.io/github/languages/top/MatrixSpark/uav-modkit)
+![Languages Used](https://img.shields.io/github/languages/count/MatrixSpark/uav-modkit)
+
+Build status is currently tracked via local build scripts: `build.sh`, `build.bat`, and `install_and_build.sh`.
 
 UAV ModKit is a modular ROS 2 framework for integrating and managing UAV sensor stacks across IMU, LiDAR, Camera, and Power domains. It provides automatic sensor detection, runtime sensor swapping, payload adapters, and health monitoring so teams can deploy mixed hardware configurations with a single workflow.
 
